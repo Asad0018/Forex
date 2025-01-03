@@ -87,8 +87,6 @@ int OnCalculate(const int rates_total,
                 const long &volume[],
                 const int &spread[])
 {
-   // Update the mdl on every tick
-
 //+------------------------------------------------------------------+
 //| Boolean variables                                                |
 //+------------------------------------------------------------------+
@@ -118,7 +116,7 @@ bool XU = Symbol() == "XAUUSD" ,
      ChJ= Symbol() == "CHFJPY" ;
 
 //+------------------------------------------------------------------+
-//| variables for MDL 55%                                            |
+//| Max Deposit Load (MDL) limitation calculation                    |
 //+------------------------------------------------------------------+
 double Available_Margin = ( (AccountEquity()* (MDL_Percentage / 100)) - (AccountMargin()*(AccountLeverage()/100)) ),
        XAU_MDL  = Available_Margin / Ask,
@@ -130,7 +128,6 @@ double Available_Margin = ( (AccountEquity()* (MDL_Percentage / 100)) - (Account
        CADx_MDL = Available_Margin / (1000/SymbolInfoDouble("USDCAD", SYMBOL_ASK)),
        CHFx_MDL = Available_Margin / (1000/SymbolInfoDouble("USDCHF", SYMBOL_ASK));
    
-//--- Function:
    double MDL;
    if      ( XU )                                        MDL = XAU_MDL ;
    else if ( EG  || EA || EN || EU || ECa || ECh || EJ ) MDL = EURx_MDL;
@@ -142,7 +139,7 @@ double Available_Margin = ( (AccountEquity()* (MDL_Percentage / 100)) - (Account
    else if ( ChJ )                                       MDL = CHFx_MDL;
    
 //+------------------------------------------------------------------+
-//| Variables for Pip Value                                          |
+//| for Pip Value calculation                                        |
 //+------------------------------------------------------------------+
 double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
        xAUD_PV = SymbolInfoDouble("AUDUSD", SYMBOL_ASK)*10 ,
@@ -152,7 +149,6 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
        xCHF_PV = 10   / SymbolInfoDouble("USDCHF", SYMBOL_ASK) ,
        xJPY_PV = 1000 / SymbolInfoDouble("USDJPY", SYMBOL_ASK) ;
    
-//--- Function:
    double PV;
    if      ( EG )                                      PV = xGBP_PV;
    else if ( EA || GA )                                PV = xAUD_PV;
@@ -172,7 +168,7 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    double MinBalance = MinBalance() + 1;
    double DPL = AccountEquity() - Midnight_Balance;
    
-   // Color conditions:
+   // ------ Colors ------
    color a = clrLime;
    color b = clrLime;
    color c = clrLime;
@@ -188,7 +184,7 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    if (MDL < 0) c = clrRed;
    if (DPL < 0) e = clrOrange;
       
-   // Convert to String:
+   // ---Convert to String---:
    string risk1Text =      DoubleToString(risk1,0);
    string risk2Text =      DoubleToString(risk2,2);
    string MDLText =        DoubleToString(MDL,3);
@@ -198,7 +194,7 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    if (PV == 10) PVText =  DoubleToString(PV,0);
    
    
-   // Show the result:
+   // ---Show the result---:
    ObjectSetText("Label0","Available:        "   + risk1Text      + " $",   12, "Arial Bold", a);
    ObjectSetText("Label1","Floating:         "   + risk2Text      + " $",   12, "Arial Bold", b);
    ObjectSetText("Label2","MDL:                " + MDLText        + " Lot", 12, "Arial Bold", c);
