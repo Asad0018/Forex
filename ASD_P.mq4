@@ -152,14 +152,14 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 
-   // ----- Variables ------
+   // -----Variables------
    double MinBalance = DDD + 1;   
    if (MDD > DDD) MinBalance = MDD;
    double risk1 = AccountBalance() - MinBalance - 1;
    double risk2 = AccountEquity() - MinBalance;
    double DPL = AccountEquity() - Midnight_Balance;
    
-   // ------ Colors ------
+   // ------Colors------
    color a = clrLime;
    color b = clrLime;
    color c = clrLime;
