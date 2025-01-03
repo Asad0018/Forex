@@ -1,7 +1,7 @@
 // +------------------------------------------------------------------+
 // |                                                        ASD_P.mq4 |
 // |                                                   Asad Khademian |
-// |                                         https://t.me/Asad018.com |
+// |                                             https://t.me/Asad018 |
 // +------------------------------------------------------------------+
 #property copyright "Asad Khademian"
 #property link      "https://t.me/Asad018.com"
