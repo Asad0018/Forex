@@ -11,7 +11,7 @@
 // +------------------------------------------------------------------+
 // | Inputs                                                           |
 // +------------------------------------------------------------------+
-input float Midnight_Balance = 15000;
+input float Midnight_Balance = 14443.07;
 input float Start_Balance    = 15000;
 input int Daily_Drawdown_Percentage = 5;
 input int Maximum_Drawdown_Percentage = 12;
@@ -153,9 +153,9 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
 // --------------------------------------------------------------------------
 
    // -----Variables------
-   double MinBalance = DDD + 1;   
+   double MinBalance = DDD;   
    if (MDD > DDD) MinBalance = MDD;
-   double risk1 = AccountBalance() - MinBalance - 1;
+   double risk1 = floor(AccountBalance() - MinBalance);
    double risk2 = AccountEquity() - MinBalance;
    double DPL = AccountEquity() - Midnight_Balance;
    
@@ -173,7 +173,7 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
       }
    if (risk2 < 0) b = clrRed;
    if (MDL < 0) c = clrRed;
-   if (DPL < 0) e = clrOrange;
+   if (DPL < 0) d = clrOrange;
       
    // ---Convert to String---:
    string risk1Text =      DoubleToString(risk1,0);
