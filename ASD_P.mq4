@@ -4,7 +4,7 @@
 // |                                             https://t.me/Asad018 |
 // +------------------------------------------------------------------+
 #property copyright "Asad Khademian"
-#property link      "https://t.me/Asad018.com"
+#property link      "https://t.me/Asad018"
 #property version   "1.02"
 #property indicator_chart_window  // Display indicator in the main chart window
 
