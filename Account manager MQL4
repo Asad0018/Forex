@@ -8,32 +8,24 @@
 #property version   "1.02"
 #property indicator_chart_window  // Display indicator in the main chart window
 
-//+------------------------------------------------------------------+
-//| Inputs                                                           |
-//+------------------------------------------------------------------+
-input double Midnight_Balance = 15000;
-input double Start_Balance    = 15000;
+// +------------------------------------------------------------------+
+// | Inputs                                                           |
+// +------------------------------------------------------------------+
+input float Midnight_Balance = 15000;
+input float Start_Balance    = 15000;
 input int Daily_Drawdown_Percentage = 5;
 input int Maximum_Drawdown_Percentage = 12;
 input float MDL_Percentage = 55;
 
-//+------------------------------------------------------------------+
-//| variables for minimum balance                                    |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Maximum drawdown (MDD) & Daily drawdown (DDD)                    |
+// +------------------------------------------------------------------+
 double MDD = Start_Balance    * (100 - Maximum_Drawdown_Percentage)/100;
 double DDD = Midnight_Balance * (100 - Daily_Drawdown_Percentage)  /100;
 
-//--- Function:
-double MinBalance()
-   {
-   double MinBalance = DDD;   
-   if (MDD > DDD) MinBalance = MDD;
-   return MinBalance;
-   }
-
-//+------------------------------------------------------------------+
-//| Custom indicator initialization function                         |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Custom indicator initialization function                         |
+// +------------------------------------------------------------------+
 int OnInit()
 {
    // Get the chart width and height for proper positioning
@@ -53,17 +45,17 @@ int OnInit()
         ObjectSetText(label_name, IntegerToString(i), 24, "Arial", clrRed);
         
         // Set the position for each label in the top-right corner
-        ObjectSetInteger(0, label_name, OBJPROP_XDISTANCE, chart_width - 190);  // Right-aligned X-offset (150 pixels from right)
-        ObjectSetInteger(0, label_name, OBJPROP_YDISTANCE, 10 + i * 20);  // Y-offset (space vertically)
+        ObjectSetInteger(0, label_name, OBJPROP_XDISTANCE, chart_width - 175);
+        ObjectSetInteger(0, label_name, OBJPROP_YDISTANCE, 10 + i * 20);
     }
 
    return(INIT_SUCCEEDED);
 }
 
 
-//+------------------------------------------------------------------+
-//| Custom indicator deinitialization function                       |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Custom indicator deinitialization function                       |
+// +------------------------------------------------------------------+
 void OnDeinit(const int reason)
 {
    // Delete the objects when the indicator is removed
@@ -73,9 +65,9 @@ void OnDeinit(const int reason)
    }
 }
 
-//+------------------------------------------------------------------+
-//| Custom indicator iteration function                              |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Custom indicator iteration function                              |
+// +------------------------------------------------------------------+
 int OnCalculate(const int rates_total,
                 const int prev_calculated,
                 const datetime &time[],
@@ -87,37 +79,37 @@ int OnCalculate(const int rates_total,
                 const long &volume[],
                 const int &spread[])
 {
-//+------------------------------------------------------------------+
-//| Boolean variables                                                |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Boolean variables                                                |
+// +------------------------------------------------------------------+
 bool XU = Symbol() == "XAUUSD" ,
-//---EUR based pair currencies:
+// --- EUR based pair currencies:
      EG = Symbol() == "EURGBP" , EA = Symbol() == "EURAUD" ,
      EN = Symbol() == "EURNZD" , EU = Symbol() == "EURUSD" ,
      ECa= Symbol() == "EURCAD" , ECh= Symbol() == "EURCHF" , 
      EJ = Symbol() == "EURJPY" ,
-//---GBP based currencies:
+// --- GBP based currencies:
      GA = Symbol() == "GBPAUD" , GN = Symbol() == "GBPNZD" ,
      GU = Symbol() == "GBPUSD" , GCa= Symbol() == "GBPCAD" ,
      GCh= Symbol() == "GBPCHF" , GJ = Symbol() == "GBPJPY" ,
-//---AUD based currencies:
+// --- AUD based currencies:
      AN = Symbol() == "AUDNZD" , AU = Symbol() == "AUDUSD" ,
      ACa= Symbol() == "AUDCAD" , ACh= Symbol() == "AUDCHF" ,
      AJ = Symbol() == "AUDJPY" ,
-//---NZD based currencies:
+// ---NZD based currencies:
      NU = Symbol() == "NZDUSD" , NCa= Symbol() == "NZDCAD" ,
      NCh= Symbol() == "NZDCHF" , NJ = Symbol() == "NZDJPY" ,
-//---USD based currencies:
+// --- USD based currencies:
      UCa= Symbol() == "USDCAD" , UCh= Symbol() == "USDCHF" ,
      UJ = Symbol() == "USDJPY" ,
-//---CAD based currencies:
+// --- CAD based currencies:
      CaCh=Symbol() == "CADCHF" , CaJ= Symbol() == "CADJPY" ,
-//---CHF based currency:
+// --- CHF based currency:
      ChJ= Symbol() == "CHFJPY" ;
 
-//+------------------------------------------------------------------+
-//| Max Deposit Load (MDL) limitation calculation                    |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Max Deposit Load (MDL) limitation calculation                    |
+// +------------------------------------------------------------------+
 double Available_Margin = ( (AccountEquity()* (MDL_Percentage / 100)) - (AccountMargin()*(AccountLeverage()/100)) ),
        XAU_MDL  = Available_Margin / Ask,
        EURx_MDL = Available_Margin / (SymbolInfoDouble("EURUSD", SYMBOL_ASK)*1000),
@@ -138,9 +130,9 @@ double Available_Margin = ( (AccountEquity()* (MDL_Percentage / 100)) - (Account
    else if ( CaCh|| CaJ )                                MDL = CADx_MDL;
    else if ( ChJ )                                       MDL = CHFx_MDL;
    
-//+------------------------------------------------------------------+
-//| for Pip Value calculation                                        |
-//+------------------------------------------------------------------+
+// +------------------------------------------------------------------+
+// | Pip Value calculation                                            |
+// +------------------------------------------------------------------+
 double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
        xAUD_PV = SymbolInfoDouble("AUDUSD", SYMBOL_ASK)*10 ,
        xNZD_PV = SymbolInfoDouble("NZDUSD", SYMBOL_ASK)*10 ,
@@ -158,24 +150,24 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    else if ( ECh|| GCh|| ACh|| NCh|| UCh|| CaCh )      PV = xCHF_PV;
    else if ( EJ || GJ || AJ || NJ || UJ || CaJ|| ChJ ) PV = xJPY_PV;
 // --------------------- Calculations ended ---------------------------------
-//---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
-   
-   // Variables:
-   double risk1 = AccountBalance() - MinBalance() - 1;
-   double risk2 = AccountEquity() - MinBalance();
-   double MinBalance = MinBalance() + 1;
+   // ----- Variables ------
+   double MinBalance = DDD + 1;   
+   if (MDD > DDD) MinBalance = MDD;
+   double risk1 = AccountBalance() - MinBalance - 1;
+   double risk2 = AccountEquity() - MinBalance;
    double DPL = AccountEquity() - Midnight_Balance;
    
    // ------ Colors ------
    color a = clrLime;
    color b = clrLime;
    color c = clrLime;
-   color d = clrAqua;
-   color e = clrLime;
+   color d = clrLime;
+   color e = clrYellow;
    color f = clrAqua;
-   
+
    if (risk1 < 0){
       a = clrRed;
       risk1 = 0;
@@ -188,19 +180,18 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    string risk1Text =      DoubleToString(risk1,0);
    string risk2Text =      DoubleToString(risk2,2);
    string MDLText =        DoubleToString(MDL,3);
-   string MinBalanceText = DoubleToString(MinBalance,0);
+   string MinBalanceText = DoubleToString(MinBalance,2);
    string DPLText =        DoubleToString(DPL,2);
    string PVText =         DoubleToString(PV,3);
    if (PV == 10) PVText =  DoubleToString(PV,0);
    
-   
    // ---Show the result---:
-   ObjectSetText("Label0","Available:        "   + risk1Text      + " $",   12, "Arial Bold", a);
-   ObjectSetText("Label1","Floating:         "   + risk2Text      + " $",   12, "Arial Bold", b);
-   ObjectSetText("Label2","MDL:                " + MDLText        + " Lot", 12, "Arial Bold", c);
-   ObjectSetText("Label3","Min Balance: "        + MinBalanceText + " $",   12, "Arial Bold", d);
-   ObjectSetText("Label4","Daily P/L:        "   + DPLText        + " $",   12, "Arial Bold", e);
-   ObjectSetText("Label5","Pip Value:      "     + PVText         + " $",   12, "Arial Bold", f);
+   ObjectSetText("Label0","Available:    "   + risk1Text      + " $",   12, "Arial Bold", a);
+   ObjectSetText("Label1","Floating:      "   + risk2Text      + " $",   12, "Arial Bold", b);
+   ObjectSetText("Label2","MDL:             " + MDLText        + " Lot", 12, "Arial Bold", c);
+   ObjectSetText("Label3","Daily P/L:     "   + DPLText        + " $",   12, "Arial Bold", d);
+   ObjectSetText("Label4","Borderline: "        + MinBalanceText + " $",   12, "Arial Bold", e);
+   ObjectSetText("Label5","Pip Value:   "     + PVText         + " $",   12, "Arial Bold", f);
 
    return(rates_total);
 }
