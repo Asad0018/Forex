@@ -28,9 +28,8 @@ double DDD = Midnight_Balance * (100 - Daily_Drawdown_Percentage)  /100;
 // +------------------------------------------------------------------+
 int OnInit()
 {
-   // Get the chart width and height for proper positioning
+   // Get the chart width for proper positioning
    int chart_width = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS, 0);
-   int chart_height = ChartGetInteger(0, CHART_HEIGHT_IN_PIXELS, 0);
    
    for (int i = 0; i < 6; i++) {
    
