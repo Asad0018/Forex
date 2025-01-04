@@ -29,33 +29,6 @@ double DDD = Midnight_Balance * (100 - Daily_Drawdown_Percentage)  /100;
 // +------------------------------------------------------------------+
 int OnInit()
 {
-   int chart_width  = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS,  0);
-   int chart_height = ChartGetInteger(0, CHART_HEIGHT_IN_PIXELS, 0);
-   int x_distance = 10;   // X distance from the left of the chart
-   int y_distance = 118;      // Y starting position
-   int line_spacing = 17; // Space between lines
-   if( Position == 1 )                 y_distance = 188;
-   if( Position == 2 || Position == 4) x_distance = chart_width - 185;
-   if( Position == 3 || Position == 4) y_distance = chart_height - 130;
-   
-   // Create a button for closing the indicator
-   string button_name = "CloseButton";
-   if (!ObjectCreate(0, button_name, OBJ_BUTTON, 0, 0, 0))
-   {
-      Print("Failed to create button. Error: ", GetLastError());
-      return INIT_FAILED;
-   }
-   
-   // Set button properties
-   ObjectSetInteger(0, button_name, OBJPROP_XDISTANCE, x_distance);          // X position (10 pixels from the left)
-   ObjectSetInteger(0, button_name, OBJPROP_YDISTANCE, y_distance);          // Y position (10 pixels from the top)
-   ObjectSetInteger(0, button_name, OBJPROP_XSIZE, 50);             // Width of the button
-   ObjectSetInteger(0, button_name, OBJPROP_YSIZE, 20);              // Height of the button
-   ObjectSetString (0, button_name, OBJPROP_TEXT, "close");           // Button text
-   ObjectSetInteger(0, button_name, OBJPROP_CORNER, CORNER_LEFT_UPPER); // Button position anchor
-   ObjectSetInteger(0, button_name, OBJPROP_COLOR, clrRed);          // Button background color
-   ObjectSetInteger(0, button_name, OBJPROP_FONTSIZE, 10);           // Font size
-   ObjectSetInteger(0, button_name, OBJPROP_BORDER_TYPE, BORDER_RAISED); // Button border type
 
    return(INIT_SUCCEEDED);
 }
@@ -100,9 +73,37 @@ int OnCalculate(const int rates_total,
                 const long &volume[],
                 const int &spread[])
 {
-// Starting positions for X and Y
+// +------------------------------------------------------------------+
+// | Creating the close button                                        |
+// +------------------------------------------------------------------+
    int chart_width  = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS,  0);
    int chart_height = ChartGetInteger(0, CHART_HEIGHT_IN_PIXELS, 0);
+   int x_distance_button = 10;   // X distance from the left of the chart
+   int y_distance = 118;      // Y starting position
+   if( Position == 1 )                 y_distance = 188;
+   if( Position == 2 || Position == 4) x_distance_button = chart_width - 185;
+   if( Position == 3 || Position == 4) y_distance = chart_height - 130;
+   
+   // Create a button for closing the indicator
+   string button_name = "CloseButton";
+   if (!ObjectCreate(0, button_name, OBJ_BUTTON, 0, 0, 0))
+   {
+      Print("Failed to create button. Error: ", GetLastError());
+      return INIT_FAILED;
+   }
+   
+   // Set button properties
+   ObjectSetInteger(0, button_name, OBJPROP_XDISTANCE, x_distance_button);          // X position (10 pixels from the left)
+   ObjectSetInteger(0, button_name, OBJPROP_YDISTANCE, y_distance);          // Y position (10 pixels from the top)
+   ObjectSetInteger(0, button_name, OBJPROP_XSIZE, 50);             // Width of the button
+   ObjectSetInteger(0, button_name, OBJPROP_YSIZE, 20);              // Height of the button
+   ObjectSetString (0, button_name, OBJPROP_TEXT, "close");           // Button text
+   ObjectSetInteger(0, button_name, OBJPROP_CORNER, CORNER_LEFT_UPPER); // Button position anchor
+   ObjectSetInteger(0, button_name, OBJPROP_COLOR, clrRed);          // Button background color
+   ObjectSetInteger(0, button_name, OBJPROP_FONTSIZE, 10);           // Font size
+   ObjectSetInteger(0, button_name, OBJPROP_BORDER_TYPE, BORDER_RAISED); // Button border type
+
+// Starting positions for X and Y
    int x_distance = 10;   // X distance from the left of the chart
    int y_start = 10;      // Y starting position
    int line_spacing = 17; // Space between lines
@@ -236,7 +237,7 @@ string words[6] = { "Available:    " + risk1Text + " $",
       ObjectSetInteger(0, label_name, OBJPROP_FONTSIZE, 12); // Font size
       ObjectSetInteger(0, label_name, OBJPROP_COLOR, colors[i]); // Font color
       ObjectSetInteger(0, label_name, OBJPROP_ANCHOR, ANCHOR_LEFT_UPPER); // Align to top-left
-      ObjectSetString(0, label_name, OBJPROP_FONT, "Arial Bold"); // Font type (Arial Bold)
+      ObjectSetString (0, label_name, OBJPROP_FONT, "Arial Bold"); // Font type (Arial Bold)
       
       // Set the position of the label
       ObjectSetInteger(0, label_name, OBJPROP_XDISTANCE, x_distance);       // Horizontal distance
