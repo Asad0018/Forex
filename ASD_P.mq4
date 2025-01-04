@@ -164,8 +164,6 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    color b = clrLime;
    color c = clrLime;
    color d = clrLime;
-   color e = clrYellow;
-   color f = clrAqua;
 
    if (risk1 < 0){
       a = clrRed;
@@ -184,13 +182,13 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    string PVText =         DoubleToString(PV,3);
    if (PV == 10) PVText =  DoubleToString(PV,0);
     
-   // ---Show the result---:
+   // ---Show the results---:
    ObjectSetText("Label0","Available:    "    + risk1Text      + " $",   12, "Arial Bold", a);
    ObjectSetText("Label1","Floating:      "   + risk2Text      + " $",   12, "Arial Bold", b);
    ObjectSetText("Label2","MDL:             " + MDLText        + " Lot", 12, "Arial Bold", c);
    ObjectSetText("Label3","Daily P/L:     "   + DPLText        + " $",   12, "Arial Bold", d);
-   ObjectSetText("Label4","Borderline: "      + MinBalanceText + " $",   12, "Arial Bold", e);
-   ObjectSetText("Label5","Pip Value:   "     + PVText         + " $",   12, "Arial Bold", f);
+   ObjectSetText("Label4","Borderline: "      + MinBalanceText + " $",   12, "Arial Bold", clrYellow);
+   ObjectSetText("Label5","Pip Value:   "     + PVText         + " $",   12, "Arial Bold", clrAqua);
 
    return(rates_total);
 }
