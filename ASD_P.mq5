@@ -11,18 +11,18 @@
 // +------------------------------------------------------------------+
 // | Inputs                                                           |
 // +------------------------------------------------------------------+
-input int Position = 2; // 1:top-left 2:top-right 3:down-left 4:down-right
+input int Position = 2;                   // 1:top-left 2:top-right 3:down-left 4:down-right
 input double Midnight_Balance = 14443.07; // Balance at the beginning of today: 
-input double Start_Balance    = 15000; // Initial deposit: 
-input int Daily_Drawdown_Percentage = 5; // Daily Drawdown Percentage:
-input int Maximum_Drawdown_Percentage = 12; // Maximum Drawdown Percentage:
-input double MDL_Percentage = 55; // MDL Limitation Percentage:
+input double Start_Balance    = 15000;    // Initial deposit: 
+input int ddd = 5;                        // Daily Drawdown Percentage:
+input int mdd = 12;                       // Maximum Drawdown Percentage:
+input double MDL_Percentage = 55;         // MDL Limitation Percentage:
 
 // +------------------------------------------------------------------+
 // | Maximum drawdown (MDD) & Daily drawdown (DDD)                    |
 // +------------------------------------------------------------------+
-double MDD = Start_Balance    * (100 - Maximum_Drawdown_Percentage)/100;
-double DDD = Midnight_Balance * (100 - Daily_Drawdown_Percentage)  /100;
+double MDD = Start_Balance    * (100 - mdd)/100;
+double DDD = Midnight_Balance * (100 - ddd)  /100;
 
 // +------------------------------------------------------------------+
 // | Custom indicator initialization function                         |
@@ -32,7 +32,9 @@ int OnInit()
 
    return(INIT_SUCCEEDED);
 }
- void OnChartEvent(const int id,         // Event ID
+// --------------------------------------------------------------------
+
+ void OnChartEvent(const int id,        // Event ID
                   const long &lparam,   // Event parameter
                   const double &dparam, // Event parameter
                   const string &sparam) // Event string parameter
@@ -79,7 +81,7 @@ int OnCalculate(const int rates_total,
    int chart_width  = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS,  0);
    int chart_height = ChartGetInteger(0, CHART_HEIGHT_IN_PIXELS, 0);
    int x_distance_button = 10;   // X distance from the left of the chart
-   int y_distance = 118;      // Y starting position
+   int y_distance = 118;         // Y distance from the top of the chart
    if( Position == 1 )                 y_distance = 188;
    if( Position == 2 || Position == 4) x_distance_button = chart_width - 185;
    if( Position == 3 || Position == 4) y_distance = chart_height - 130;
