@@ -11,7 +11,7 @@
 // +------------------------------------------------------------------+
 // | Inputs                                                           |
 // +------------------------------------------------------------------+
-input int Position = 3; // 1:top-left 2:top-right 3:down-left 4:down-right
+input int Position = 2; // 1:top-left 2:top-right 3:down-left 4:down-right
 input double Midnight_Balance = 14443.07; // Balance at the beginning of today: 
 input double Start_Balance    = 15000; // Initial deposit: 
 input int Daily_Drawdown_Percentage = 5; // Daily Drawdown Percentage:
@@ -29,8 +29,46 @@ double DDD = Midnight_Balance * (100 - Daily_Drawdown_Percentage)  /100;
 // +------------------------------------------------------------------+
 int OnInit()
 {
+   int chart_width  = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS,  0);
+   int chart_height = ChartGetInteger(0, CHART_HEIGHT_IN_PIXELS, 0);
+   int x_distance = 10;   // X distance from the left of the chart
+   int y_distance = 118;      // Y starting position
+   int line_spacing = 17; // Space between lines
+   if( Position == 1 )                 y_distance = 188;
+   if( Position == 2 || Position == 4) x_distance = chart_width - 185;
+   if( Position == 3 || Position == 4) y_distance = chart_height - 130;
    
+   // Create a button for closing the indicator
+   string button_name = "CloseButton";
+   if (!ObjectCreate(0, button_name, OBJ_BUTTON, 0, 0, 0))
+   {
+      Print("Failed to create button. Error: ", GetLastError());
+      return INIT_FAILED;
+   }
+   
+   // Set button properties
+   ObjectSetInteger(0, button_name, OBJPROP_XDISTANCE, x_distance);          // X position (10 pixels from the left)
+   ObjectSetInteger(0, button_name, OBJPROP_YDISTANCE, y_distance);          // Y position (10 pixels from the top)
+   ObjectSetInteger(0, button_name, OBJPROP_XSIZE, 50);             // Width of the button
+   ObjectSetInteger(0, button_name, OBJPROP_YSIZE, 20);              // Height of the button
+   ObjectSetString (0, button_name, OBJPROP_TEXT, "close");           // Button text
+   ObjectSetInteger(0, button_name, OBJPROP_CORNER, CORNER_LEFT_UPPER); // Button position anchor
+   ObjectSetInteger(0, button_name, OBJPROP_COLOR, clrRed);          // Button background color
+   ObjectSetInteger(0, button_name, OBJPROP_FONTSIZE, 10);           // Font size
+   ObjectSetInteger(0, button_name, OBJPROP_BORDER_TYPE, BORDER_RAISED); // Button border type
+
    return(INIT_SUCCEEDED);
+}
+ void OnChartEvent(const int id,         // Event ID
+                  const long &lparam,   // Event parameter
+                  const double &dparam, // Event parameter
+                  const string &sparam) // Event string parameter
+{
+   if (id == CHARTEVENT_OBJECT_CLICK && sparam == "CloseButton")
+   {
+      // Remove the indicator from the chart when the button is clicked
+      ChartIndicatorDelete(0, 0, "ASD_P");
+   }
 }
 
 // +------------------------------------------------------------------+
@@ -38,6 +76,9 @@ int OnInit()
 // +------------------------------------------------------------------+
 void OnDeinit(const int reason)
 {
+   // Delete the button when the indicator is removed
+   ObjectDelete(0, "CloseButton");
+   
    // Delete the objects when the indicator is removed
    for (int i = 0; i < 6; i++) {
       string label_name = "Label" + IntegerToString(i);
