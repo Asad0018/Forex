@@ -1,5 +1,5 @@
 // +------------------------------------------------------------------+
-// |                                                        ASD_P.mq4 |
+// |                                                        ASD_P.mq5 |
 // |                                                   Asad Khademian |
 // |                                             https://t.me/Asad018 |
 // +------------------------------------------------------------------+
@@ -11,12 +11,12 @@
 // +------------------------------------------------------------------+
 // | Inputs                                                           |
 // +------------------------------------------------------------------+
-input int Position = 1; // in order: top-left,top-right,down-left,down-right
-input float Midnight_Balance = 14443.07;
-input float Start_Balance    = 15000;
-input int Daily_Drawdown_Percentage = 5;
-input int Maximum_Drawdown_Percentage = 12;
-input float MDL_Percentage = 55;
+input int Position = 3; // 1:top-left 2:top-right 3:down-left 4:down-right
+input double Midnight_Balance = 14443.07; // Balance at the beginning of today: 
+input double Start_Balance    = 15000; // Initial deposit: 
+input int Daily_Drawdown_Percentage = 5; // Daily Drawdown Percentage:
+input int Maximum_Drawdown_Percentage = 12; // Maximum Drawdown Percentage:
+input double MDL_Percentage = 55; // MDL Limitation Percentage:
 
 // +------------------------------------------------------------------+
 // | Maximum drawdown (MDD) & Daily drawdown (DDD)                    |
