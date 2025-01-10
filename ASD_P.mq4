@@ -11,17 +11,24 @@
 // +------------------------------------------------------------------+
 // | Inputs                                                           |
 // +------------------------------------------------------------------+
-input float Midnight_Balance = 14443.07;
-input float Start_Balance    = 15000;
+input double Midnight_Balance = 0;
+input double Start_Balance    = 15000;
 input int Daily_Drawdown_Percentage = 5;
 input int Maximum_Drawdown_Percentage = 12;
-input float MDL_Percentage = 55;
-
+input double MDL_Percentage = 55;
+// Default value of midnight balance = current balance:
+double MB(){
+   double a;
+   if (Midnight_Balance == 0) a = AccountBalance();
+      return a;
+   return Midnight_Balance;
+}
+const double MB = MB();
 // +------------------------------------------------------------------+
 // | Maximum drawdown (MDD) & Daily drawdown (DDD)                    |
 // +------------------------------------------------------------------+
-double MDD = Start_Balance    * (100 - Maximum_Drawdown_Percentage)/100;
-double DDD = Midnight_Balance * (100 - Daily_Drawdown_Percentage)  /100;
+double MDD = Start_Balance * (100 - Maximum_Drawdown_Percentage)/100;
+double DDD = MB * (100 - Daily_Drawdown_Percentage)/100;
 
 // +------------------------------------------------------------------+
 // | Custom indicator initialization function                         |
@@ -157,7 +164,7 @@ double xGBP_PV = SymbolInfoDouble("GBPUSD", SYMBOL_ASK)*10 ,
    if (MDD > DDD) MinBalance = MDD;
    double risk1 = floor(AccountBalance() - MinBalance);
    double risk2 = AccountEquity() - MinBalance;
-   double DPL = AccountEquity() - Midnight_Balance;
+   double DPL = AccountEquity() - MB;
    
    // ------Colors------
    color a = clrLime;
