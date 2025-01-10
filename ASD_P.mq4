@@ -11,6 +11,7 @@
 // +------------------------------------------------------------------+
 // | Inputs                                                           |
 // +------------------------------------------------------------------+
+input int Position = 2;                   // 1:top-left 2:top-right 3:down-left 4:down-right
 input double Midnight_Balance = 0;
 input double Start_Balance    = 15000;
 input int Daily_Drawdown_Percentage = 5;
@@ -35,8 +36,15 @@ double DDD = MB * (100 - Daily_Drawdown_Percentage)/100;
 // +------------------------------------------------------------------+
 int OnInit()
 {
-   // Get the chart width for proper positioning
-   int chart_width = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS, 0);
+   int chart_width  = ChartGetInteger(0, CHART_WIDTH_IN_PIXELS,  0);
+   int chart_height = ChartGetInteger(0, CHART_HEIGHT_IN_PIXELS, 0);
+   // Starting positions for X and Y
+   int x_distance = 10;   // X distance from the left of the chart
+   int y_start = 10;      // Y starting position
+   int line_spacing = 17; // Space between lines
+   if( Position == 1 )                 y_start = 80;
+   if( Position == 2 || Position == 4) x_distance = chart_width - 185;
+   if( Position == 3 || Position == 4) y_start = chart_height - 110;
    
    for (int i = 0; i < 6; i++) {
    
@@ -51,8 +59,8 @@ int OnInit()
         ObjectSetText(label_name, IntegerToString(i), 24, "Arial", clrRed);
         
         // Set the position for each label in the top-right corner
-        ObjectSetInteger(0, label_name, OBJPROP_XDISTANCE, chart_width - 175);
-        ObjectSetInteger(0, label_name, OBJPROP_YDISTANCE, 10 + i * 20);
+        ObjectSetInteger(0, label_name, OBJPROP_XDISTANCE, x_distance);
+        ObjectSetInteger(0, label_name, OBJPROP_YDISTANCE, y_start + i * 17);
     }
 
    return(INIT_SUCCEEDED);
